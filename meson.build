@@ -8,15 +8,21 @@ cpp_sources = run_command(
 inc_dir = include_directories('./include')
 
 compile_args = []
+deps = []
+
 if get_option('build_type') == 'debug'
   add_project_arguments('-DDEB_BUILD', language:'cpp')
-  compile_args += ['-g', '-ggdb']
+  compile_args += ['-g', '-Wall','-ggdb']
 elif  get_option('build_type') == 'release'
   add_project_arguments('-DREL_BUILD', language:'cpp')
   compile_args += ['-o3']
 endif
 
+lua_dep = dependency('lua5.3', required : true)
+deps += [lua_dep]
+
 executable('luaRender', cpp_sources,
   include_directories: inc_dir,
   cpp_args: compile_args,
+  dependencies: deps,
   )
